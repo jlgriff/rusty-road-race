@@ -25,6 +25,22 @@ fn main() {
     game.audio_manager
         .play_music(MusicPreset::Classy8Bit, VOLUME_MUSIC);
 
+    // Generate assets
+    create_sprites(&mut game);
+
+    // Game logic functions are run each frame
+    // These will run in the order they're added here
+    game.add_logic(player_movement_logic);
+    game.add_logic(road_movement_logic);
+
+    // Run the game with an initial state
+    game.run(GameState {
+        health: 5,
+        lost: false,
+    });
+}
+
+fn create_sprites(game: &mut Game<GameState>) {
     // Create the road
     for i in 0..10 {
         let road_line = game.add_sprite(
@@ -93,17 +109,6 @@ fn main() {
         obstacle.translation.y =
             thread_rng().gen_range((WINDOW_MIN_Y + 60.0)..(WINDOW_MAX_Y - 60.0));
     }
-
-    // Game logic functions are run each frame
-    // These will run in the order they're added here
-    game.add_logic(player_movement_logic);
-    game.add_logic(road_movement_logic);
-
-    // Run the game with an initial state
-    game.run(GameState {
-        health: 5,
-        lost: false,
-    });
 }
 
 fn player_movement_logic(engine: &mut Engine, game_state: &mut GameState) {
