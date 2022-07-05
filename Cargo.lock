@@ -2475,6 +2475,7 @@ dependencies = [
 name = "rusty-road-race"
 version = "0.1.0"
 dependencies = [
+ "rand",
  "rusty_engine",
 ]
 
