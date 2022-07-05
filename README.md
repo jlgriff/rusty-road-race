@@ -14,6 +14,8 @@ The game is built with Rust using Rusty Engine. 🦀
 1. Navigate to the project directory.
 2. Run `cargo run` to begin playing.
 
+![rusty-road-racing](https://user-images.githubusercontent.com/53009037/177260255-abc0bf40-28ad-4608-a2d1-2c2efb19aea2.gif)
+
 # Controls
 
 | Action | Key Binding |
