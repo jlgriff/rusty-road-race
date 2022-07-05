@@ -48,10 +48,16 @@ fn main() {
 
 fn player_movement_logic(engine: &mut Engine, game_state: &mut GameState) {
     let mut direction = 0.0;
-    if engine.keyboard_state.pressed(KeyCode::Up) {
+    if engine
+        .keyboard_state
+        .pressed_any(&[KeyCode::Up, KeyCode::W])
+    {
         direction += 1.0;
     }
-    if engine.keyboard_state.pressed(KeyCode::Down) {
+    if engine
+        .keyboard_state
+        .pressed_any(&[KeyCode::Down, KeyCode::S])
+    {
         direction -= 1.0;
     }
 
@@ -68,7 +74,7 @@ fn road_movement_logic(engine: &mut Engine, game_state: &mut GameState) {
         if sprite.label.starts_with(ID_ROAD_LINE_SPRITE) {
             sprite.translation.x -= SPEED_ROAD_OBJECTS * engine.delta_f32;
             if sprite.translation.x < WINDOW_MIN_X {
-                sprite.translation.x += WINDOW_MIN_X + WINDOW_MAX_X;
+                sprite.translation.x += (WINDOW_MAX_X * 2.0);
             }
         }
     }
