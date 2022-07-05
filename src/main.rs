@@ -28,10 +28,15 @@ fn main() {
     // Generate assets
     create_sprites(&mut game);
 
+    // Create health text
+    let health_message = game.add_text(ID_HEALTH_TEXT, "Health: 5");
+    health_message.translation = Vec2::new(550.0, 320.0);
+
     // Game logic functions are run each frame
     // These will run in the order they're added here
     game.add_logic(player_movement_logic);
     game.add_logic(road_movement_logic);
+    game.add_logic(collision_logic);
 
     // Run the game with an initial state
     game.run(GameState {
@@ -134,7 +139,7 @@ fn player_movement_logic(engine: &mut Engine, game_state: &mut GameState) {
     }
 }
 
-fn road_movement_logic(engine: &mut Engine, game_state: &mut GameState) {
+fn road_movement_logic(engine: &mut Engine, _game_state: &mut GameState) {
     for sprite in engine.sprites.values_mut() {
         // Road and barrier movement
         if sprite.label.starts_with(ID_ROAD_LINE_SPRITE)
@@ -142,7 +147,7 @@ fn road_movement_logic(engine: &mut Engine, game_state: &mut GameState) {
         {
             sprite.translation.x -= SPEED_ROAD * engine.delta_f32;
             if sprite.translation.x < WINDOW_MIN_X {
-                sprite.translation.x += (WINDOW_MAX_X * 2.0);
+                sprite.translation.x += WINDOW_MAX_X * 2.0;
             }
         }
         // Car movement
@@ -168,12 +173,27 @@ fn road_movement_logic(engine: &mut Engine, game_state: &mut GameState) {
     }
 }
 
+fn collision_logic(engine: &mut Engine, game_state: &mut GameState) {
+    let health_message = engine.texts.get_mut(ID_HEALTH_TEXT).unwrap();
+    for event in engine.collision_events.drain(..) {
+        if !event.pair.either_contains(ID_PLAYER_SPRITE) || event.state.is_end() {
+            continue;
+        }
+        if game_state.health > 0 {
+            game_state.health -= 1;
+            health_message.value = format!("Health: {}", game_state.health);
+            engine.audio_manager.play_sfx(SfxPreset::Impact3, 1.0);
+        }
+    }
+}
+
 // ID constants
 const ID_PLAYER_SPRITE: &str = "player";
 const ID_ROAD_LINE_SPRITE: &str = "road_line";
 const ID_BARRIER_SPRITE: &str = "barrier";
 const ID_OBSTACLE_SPRITE: &str = "obstacle";
 const ID_CAR_SPRITE: &str = "car";
+const ID_HEALTH_TEXT: &str = "health";
 
 // Graphical constants
 const WINDOW_MIN_Y: f32 = -360.0;
