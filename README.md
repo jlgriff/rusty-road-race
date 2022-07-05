@@ -2,7 +2,7 @@
 
 Avoid road obstacles and other drivers as you recklessly zoom down the highway. You're already paying way too much for car insurance, so avoid totaling your car for as long as possible!
 
-The game is built with Rust. 🦀
+The game is built with Rust using Rusty Engine. 🦀
 
 # Installation
 
@@ -21,3 +21,7 @@ The game is built with Rust. 🦀
 | Move up | `↑` or `W` |
 | Move down | `↓` or `S` |
 | Quit | `esc` |
+
+# Credit
+
+Created with the guidance of Nathan Stocks' excellent [Rust course](https://www.udemy.com/course/ultimate-rust-2/).
