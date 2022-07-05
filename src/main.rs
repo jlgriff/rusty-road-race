@@ -117,6 +117,7 @@ fn create_sprites(game: &mut Game<GameState>) {
 }
 
 fn player_movement_logic(engine: &mut Engine, game_state: &mut GameState) {
+    let player = engine.sprites.get_mut(ID_PLAYER_SPRITE).unwrap();
     let mut direction = 0.0;
     if engine
         .keyboard_state
@@ -131,11 +132,9 @@ fn player_movement_logic(engine: &mut Engine, game_state: &mut GameState) {
         direction -= 1.0;
     }
 
-    let player = engine.sprites.get_mut(ID_PLAYER_SPRITE).unwrap();
-    player.translation.y += direction * SPEED_PLAYER * engine.delta_f32;
-    player.rotation = direction * 0.15;
-    if player.translation.y < WINDOW_MIN_Y || player.translation.y > WINDOW_MAX_Y {
-        game_state.health = 0;
+    if player.translation.y < WINDOW_MAX_Y - 40.0 && player.translation.y > WINDOW_MIN_Y + 40.0 {
+        player.translation.y += direction * SPEED_PLAYER * engine.delta_f32;
+        player.rotation = direction * 0.15;
     }
 }
 
