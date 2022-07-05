@@ -32,11 +32,8 @@ fn main() {
     let health_message = game.add_text(ID_HEALTH_TEXT, "Health: 5");
     health_message.translation = Vec2::new(550.0, 320.0);
 
-    // Game logic functions are run each frame
-    // These will run in the order they're added here
-    game.add_logic(player_movement_logic);
-    game.add_logic(road_movement_logic);
-    game.add_logic(collision_logic);
+    // Game logic to be run on each frame
+    game.add_logic(game_logic);
 
     // Run the game with an initial state
     game.run(GameState {
@@ -116,7 +113,25 @@ fn create_sprites(game: &mut Game<GameState>) {
     }
 }
 
-fn player_movement_logic(engine: &mut Engine, game_state: &mut GameState) {
+fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
+    if game_state.health == 0 {
+        return;
+    } else {
+        player_movement_logic(engine, game_state);
+        road_movement_logic(engine, game_state);
+        collision_logic(engine, game_state);
+
+        if game_state.health == 0 {
+            game_state.lost = true;
+            let game_over = engine.add_text(ID_GAME_OVER, "Game Over");
+            game_over.font_size = 128.0;
+            engine.audio_manager.stop_music();
+            engine.audio_manager.play_sfx(SfxPreset::Jingle3, 1.0);
+        }
+    }
+}
+
+fn player_movement_logic(engine: &mut Engine, _game_state: &mut GameState) {
     let player = engine.sprites.get_mut(ID_PLAYER_SPRITE).unwrap();
     let mut direction = 0.0;
     if engine
@@ -193,6 +208,7 @@ const ID_BARRIER_SPRITE: &str = "barrier";
 const ID_OBSTACLE_SPRITE: &str = "obstacle";
 const ID_CAR_SPRITE: &str = "car";
 const ID_HEALTH_TEXT: &str = "health";
+const ID_GAME_OVER: &str = "game_over";
 
 // Graphical constants
 const WINDOW_MIN_Y: f32 = -360.0;
